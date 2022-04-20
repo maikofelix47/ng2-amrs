@@ -68,7 +68,7 @@
     *ngIf="visit && patient && visit.stopDatetime === null"
     style="margin-left: -8px; margin-bottom: -4px; margin-top: -8px"
   >
-    Current Visit
+    Current Visit {{visit | json }}
   </h3>
   <div
     *ngIf="visit && patient && visit.stopDatetime === null"

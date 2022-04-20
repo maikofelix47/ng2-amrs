@@ -11,7 +11,7 @@ import {
 import { DatePipe } from '@angular/common';
 
 import * as moment from 'moment';
-import { isEqual } from 'lodash';
+import { isEqual, truncate } from 'lodash';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 
 import { UserDefaultPropertiesService } from '../../../../user-default-properties/index';
@@ -172,7 +172,8 @@ export class VisitStarterComponent implements OnInit, OnDestroy {
           this.patientUuid,
           this.programUuid,
           this.programEnrollmentUuid,
-          this.selectedLocation.value
+          this.selectedLocation.value,
+          'false'
         )
         .take(1)
         .subscribe(

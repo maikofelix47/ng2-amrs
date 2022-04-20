@@ -49,9 +49,12 @@ export class PatientProgramResourceService {
   public getPatientProgramVisitTypes(
     patientUuid: string,
     programUuid: string,
-    enrollmentUuid,
-    locationUuid: string
+    enrollmentUuid: string,
+    locationUuid: string,
+    restroSpective?: string,
+    visitDate?: string
   ): Observable<any> {
+    console.log('getPatientProgramVisit called...', restroSpective);
     const url =
       this.appSettingsService.getEtlRestbaseurl().trim() +
       'patient/' +
@@ -60,10 +63,13 @@ export class PatientProgramResourceService {
       programUuid +
       '/enrollment/' +
       enrollmentUuid;
-    const params: HttpParams = new HttpParams().set(
-      'intendedLocationUuid',
-      locationUuid && locationUuid.length > 0 ? locationUuid : locationUuid
-    );
+    const params: HttpParams = new HttpParams()
+      .set(
+        'intendedLocationUuid',
+        locationUuid && locationUuid.length > 0 ? locationUuid : locationUuid
+      )
+      .set('restroSpective', restroSpective)
+      .set('visitDate', visitDate);
     return this.http.get(url, { params: params });
   }
 }
