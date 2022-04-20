@@ -29,6 +29,12 @@ export class VisitDetailsComponent implements OnInit {
     title: '',
     message: ''
   };
+  public covidScreeningUuid = '466d6707-8429-4e61-b5a0-d63444f5ad35';
+  public screenedForCovidToday = false;
+  public clinicalEncounters = ['8d5b2be0-c2cc-11de-8d13-0010c6dffd0f'];
+  public isRetrospectiveVisit = false;
+  public retrospectiveAttributeTypeUuid =
+    '3bb41949-6596-4ff9-a54f-d3d7883a69ed';
 
   public get visitEncounters(): any[] {
     const mappedEncounters: Encounter[] = new Array<Encounter>();
@@ -73,6 +79,8 @@ export class VisitDetailsComponent implements OnInit {
   public set visit(v: any) {
     this._visit = v;
     this.extractCompletedEncounterTypes();
+    this.checkForCovidAssessment();
+    this.checkForRestrospectiveVisit();
   }
 
   public get isVisitEnded() {
@@ -135,6 +143,23 @@ export class VisitDetailsComponent implements OnInit {
     }
   }
 
+  public checkForCovidAssessment(): void {
+    const covidAssessment = this.visit.encounters.some((a: any) => {
+      return a.encounterType.uuid === this.covidScreeningUuid;
+    });
+    this.screenedForCovidToday = covidAssessment;
+  }
+
+  public checkForRestrospectiveVisit(): void {
+    let isRetrospective = false;
+    if (this.visit.hasOwnProperty('attributes')) {
+      isRetrospective = this.visit.attributes.some((a: any) => {
+        return a.attributeType.uuid === this.retrospectiveAttributeTypeUuid;
+      });
+    }
+    this.isRetrospectiveVisit = isRetrospective;
+  }
+
   public updateRetroVisitSettings(payload) {
     this.visitResourceService.updateVisit(this.visit.uuid, payload).subscribe(
       (udpatedVisit) => {
@@ -187,6 +212,16 @@ export class VisitDetailsComponent implements OnInit {
           this.patient.person.age > 49 ||
           this.patient.person.gender === 'M') &&
         programName === 'Standard HIV TREATMENT'
+      ) {
+      } else if (
+        (a.uuid === '8d5b2be0-c2cc-11de-8d13-0010c6dffd0f' ||
+          a.uuid === '8d5b3108-c2cc-11de-8d13-0010c6dffd0f' ||
+          a.uuid === '4e7553b4-373d-452f-bc89-3f4ad9a01ce7' ||
+          a.uuid === 'fc8c1694-90fc-46a8-962b-73ce9a99a78f' ||
+          a.uuid === 'df55406e-1350-11df-a1f1-0026b9348838' ||
+          a.uuid === '8d5b2dde-c2cc-11de-8d13-0010c6dffd0f') &&
+        !this.screenedForCovidToday &&
+        !this.isRetrospectiveVisit
       ) {
       } else {
         allowedEncounters.push(a.uuid);

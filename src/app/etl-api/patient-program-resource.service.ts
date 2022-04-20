@@ -51,7 +51,7 @@ export class PatientProgramResourceService {
     programUuid: string,
     enrollmentUuid: string,
     locationUuid: string,
-    restroSpective?: string,
+    restroSpective?: boolean,
     visitDate?: string
   ): Observable<any> {
     console.log('getPatientProgramVisit called...', restroSpective);
@@ -68,7 +68,7 @@ export class PatientProgramResourceService {
         'intendedLocationUuid',
         locationUuid && locationUuid.length > 0 ? locationUuid : locationUuid
       )
-      .set('restroSpective', restroSpective)
+      .set('restroSpective', restroSpective.toString())
       .set('visitDate', visitDate);
     return this.http.get(url, { params: params });
   }

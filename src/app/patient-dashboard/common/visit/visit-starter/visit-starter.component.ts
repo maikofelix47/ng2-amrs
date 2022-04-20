@@ -173,13 +173,14 @@ export class VisitStarterComponent implements OnInit, OnDestroy {
           this.programUuid,
           this.programEnrollmentUuid,
           this.selectedLocation.value,
-          'false'
+          false
         )
         .take(1)
         .subscribe(
           (progConfig) => {
             this.isBusy = false;
             this.programVisitsConfig = progConfig;
+            console.log('progConf', progConfig);
           },
           (error) => {
             this.isBusy = false;
